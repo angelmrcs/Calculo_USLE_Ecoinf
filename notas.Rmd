@@ -1,0 +1,44 @@
+---
+title: "notas"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+efecto borde -> problema en bordes 
+-> función calc_sde que hace ellipse (standard deviation ellipse) entre la que interpolación es válida
+
+
+distribución espacial
+autocorrelación (sobre todo variables topográficas)
+regla tobler: cuando mas 
+semiovariograma
+curva asymptotica
+x -> distancia 
+y -> variancia
+
+maya regular de puntos (grid) -> area de estudio
+
+.asc
+dos fromas: 
+- forma que es leible para todos (nobinaria); 
+- forma binaria de arc grid (no interpretable)
+
+
+
+metodos deterministicos 
+distancia euclidia
+solo distancia!
+globales: distancia entre todos los puntos
+
+
+metodo krigin
+
+interpolado idw
+interpolador deterministico global
+
+
+R -> formula para calcular R en otro lado, calculación a partír de varias variables de estaciones meterológicas
+
+

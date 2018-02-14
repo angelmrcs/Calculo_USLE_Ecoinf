@@ -1,0 +1,36 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Factores que hay que tener en cuenta:
+interpolación espacial (geoestadistica)
+effecto borde -> ley de tolder : cosas más parecidas cuando más cercas estén
+-> puntos en los bordes de menos calidad
+
+distribuciónes espaciales
+-aggregada: sobredimensionando peso de los sitios donde haya mucho puntos -> autocorrelación espacial; más apropiado: distrib. regular o aleatoria
+
+distrib. espacial de nuestra variable con otra variable espacial
+-> covariables "variables acompañantes" (más que todo topograficas)
+
+Metodos deterministicos:
+distancia euclidia (recta)
+-> asignación a base de como lejos están (solo distación, no valores de puntos!)
+subgrupo 1: globales: distancia de un punto a todos los puntos de la muestra --> menos variancia
+subgrupo 2: locales: distancia solo puntos vecindad (se define)
+
+
+Metodos kriging: (mas potente)
+distancia entre puntos y distrib. estad. de variable que estamos interpolando
+semivariograma: 
+eje x: distancia
+eje y: variancia entre puntos
+comportamiento asymtópico
+
+
+ensamblado de resultados
+tomar pormedio de diferentes metodos
