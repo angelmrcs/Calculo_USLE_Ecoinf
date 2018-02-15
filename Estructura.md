@@ -34,7 +34,14 @@ Mediante R se generaron los archivos .asc y .shp necesarios, no incluidos en el 
 
 ----------
 **Cálculo de C**
-La C se calculó para dos años (1956 y 2003) a través de QGIS. De estos dos cálculos se derivan X (equis) archivos:
+La C se calculó para dos años (1956 y 2003) a través de QGIS y Access. De estos dos cálculos se derivan 6 (seis) archivos que contienen el código SQL que organiza las consultas en Access:
+
+*asigna_c_CLC.txt*
+*asigna_c_CLC._2.txt*
+*atrib_shp_99.txt*
+*genera_tabla_atributos_shape.txt*
+*genera_tabla_atributos_shape_2.txt*
+*lista_usos_cubillas.txt*
 
 
 ----------
