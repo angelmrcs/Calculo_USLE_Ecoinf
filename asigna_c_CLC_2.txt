@@ -1,0 +1,2 @@
+SELECT UC.COD_USO, dicc_CLC.min_c, dicc_CLC.max_c, ([dicc_CLC]![min_c]+[dicc_CLC]![max_c])/2 AS avg_c, UC.DESCRIPCION
+FROM dicc_CLC INNER JOIN UC ON dicc_CLC.Id_clc = UC.ID_CLC;

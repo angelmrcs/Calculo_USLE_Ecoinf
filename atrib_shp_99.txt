@@ -1,0 +1,2 @@
+SELECT uc569903_cubillas.OBJECTID, asigna_C_CLC_2.COD_USO, asigna_C_CLC_2.DESCRIPCION AS des_99, asigna_C_CLC_2.min_c AS cmin_99, asigna_C_CLC_2.max_c AS cmax_99, asigna_C_CLC_2.avg_c AS cavg_99
+FROM uc569903_cubillas INNER JOIN asigna_C_CLC_2 ON uc569903_cubillas.UC99 = asigna_C_CLC_2.COD_USO;
