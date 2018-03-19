@@ -1,0 +1,59 @@
+############   QGIS/PYTHON   ############
+# WRAP (reproject) kst-file of europe (Panagos et al. 2014)
+gdalwarp -overwrite -s_srs EPSG:3035 -t_srs EPSG:23030 -of GTiff C:/Users/tobia/Documents/Sync/CGRBIO/a_academico/a_general/geodatos/K-factor/Kst_Factor/Kst_correct_noneg.tif C:/Users/tobia/Documents/Sync/CGRBIO/a_academico/Ecoinformatica/factor_K/k_23030.tif
+# CLIP broader study area
+gdal_translate -projwin 358000.0 4160000.0 500000.0 4080000.0 -of GMT C:/Users/tobia/Documents/Sync/CGRBIO/a_academico/Ecoinformatica/factor_K/k_23030.tif C:/Users/tobia/Documents/Sync/CGRBIO/a_academico/Ecoinformatica/factor_K/kst_clip.tif
+# TRANSLATE (transform raster to point dataset xyz)
+gdal_translate -a_srs EPSG:23030 -of XYZ C:/Users/tobia/Documents/Sync/CGRBIO/a_academico/Ecoinformatica/factor_K/kst_clip.tif C:/Users/tobia/Documents/Sync/CGRBIO/a_academico/Ecoinformatica/factor_K/kst_points.xyz
+
+
+
+############   R   ############
+# SETTING UP WORKING DIRECTORY AND LOADING PACKAGES 
+setwd("~/Sync/CGRBIO/a_academico/Ecoinformatica/factor_K")
+
+library(sp)
+library(rgdal)
+library(automap)
+library(ggplot2)
+library(aspace)
+library(gstat)
+library(raster)
+
+# LOAD AND FORMAT K DATASET; GET RID OF ERROR VALUES (z>0)
+lista_K<-read.table("kst_points.xyz", dec=".", header=F, sep = ' ')
+colnames(lista_K) <- c("x", "y", "z")
+summary(lista_K)
+lista_K <- subset(lista_K, z>0)
+
+
+# USING "aspace" PACKAGE TO CALCULATE STANTDARD DEVIATION ELLIPSE. THIS TOOL IS USEFUL TO DETERMINE WHETHER OUR STUDY AREA IS AFFECTED BY THE BORDER EFFECT
+calc_sde(id=1, filename="SDE_Output.txt", centre.xy=NULL, calccentre=TRUE,
+         points=data.frame(lista_K$x,lista_K$y))
+plot_sde(plotnew = TRUE)
+
+elipse_shp<-convert.to.shapefile(sdeloc,sdeatt, "id",5)
+write.shapefile(elipse_shp,"elipse_shp")
+
+# CONVERT DATAFRAME TO A SPDF (SPATIAL DATAFRAME)
+coordinates(lista_K)<-~ x + y
+
+# FITTING A VARIOGRAM
+variogram = autofitVariogram(z~1,lista_K)
+plot(variogram[[var_model]])
+
+# SETTING UP NEW GRID
+area_estudio<-readOGR(dsn=".", layer='area_estudio_23030')
+grid <- makegrid(area_estudio, cellsize = 100)
+gridded(grid) =~ x1+x2
+
+# PERFORMING ORDINDARY KRIGING
+k_100_20 <- krige(z~1, lista_K, grid, model = variogram[["var_model"]], nmin = 4, nmax = 20, maxdist = -1, block = 100)
+plot(k_100_20) 
+
+#REPROJECTING TO DESIRED CSR (IPSG 23030)
+proj4string(k_100_20) <- "+proj=utm +zone=30 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs"
+is.projected(k_100_20)
+
+# EXPORTING INTERPOLATED K LAYER
+writeGDAL(k_100_20["var1.pred"], "factor_k_100.asc")
